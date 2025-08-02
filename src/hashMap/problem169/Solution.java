@@ -33,4 +33,26 @@ public class Solution {
         }
         return -1;
     }
+
+    // #3. Boyer-Moore Voting Algorithm
+    // Time Complexity: O(n), where n is the length of the input array
+    // Space Complexity: O(1), no extra space used.
+    public int majorityElement3(int[] nums) {
+        int candidate = 0;
+        int count = 0;
+
+        for(int num: nums){
+            if(count == 0){
+                candidate = num;
+            }
+
+            if(num == candidate){
+                count++;
+            } else {
+                count--;
+            }
+        }
+
+        return candidate;
+    }
 }
