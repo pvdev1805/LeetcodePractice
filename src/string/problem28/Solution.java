@@ -67,4 +67,57 @@ public class Solution {
         }
         return -1; // Needle not found in haystack
     }
+
+    // #4. KMP Algorithm (Knuth-Morris-Pratt)
+    // Time Complexity: O(n + m), where n is the length of haystack and m is the length of needle.
+    // Space Complexity: O(m), for the prefix table
+    public void computeLPSArray(String needle, int m, int[] lps) {
+        int len = 0; // Length of the previous longest prefix suffix
+        lps[0] = 0; // lps[0] is always 0
+        int i = 1;
+
+        while(i < m){
+            if(needle.charAt(i) == needle.charAt(len)){
+                len++;
+                lps[i] = len;
+                i++;
+            } else {
+                if(len != 0){
+                    len = lps[len - 1]; // Use the previous prefix suffix length
+                } else {
+                    lps[i] = 0;
+                    i++;
+                }
+            }
+        }
+    }
+
+    public int strStr4(String haystack, String needle) {
+        int n = haystack.length();
+        int m = needle.length();
+
+        if(m == 0) return 0; // If needle is empty, return 0
+        if(n < m) return -1; // If haystack is shorter than needle, return -1
+
+        // Build the prefix table
+        int[] lps = new int[m];
+        computeLPSArray(needle, m, lps);
+
+        int i = 0; // index for haystack
+        int j = 0; // index for needle
+
+        while(i < n){
+            if(needle.charAt(j) == haystack.charAt(i)){
+                i++;
+                j++;
+            }
+            if(j == m) return i - j; // Found the first occurrence
+            else if(i < n && needle.charAt(j) != haystack.charAt(i)){
+                if(j != 0) j = lps[j - 1]; // Use the prefix table to skip characters
+                else i++;
+            }
+        }
+        return -1; // Needle not found in haystack
+    }
+
 }
